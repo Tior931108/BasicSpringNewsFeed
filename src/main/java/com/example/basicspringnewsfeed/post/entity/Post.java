@@ -20,13 +20,44 @@ public class Post extends BaseEntity {
     private String title;
     @Column(length = 400, nullable = false)
     private String content;
-    @Column(columnDefinition = "BIGINT DEFAULT 0")
-    private Integer likedCount;
-    @Column(columnDefinition = "BIGINT DEFAULT 0")
-    private Integer commentCount;
+
+    // 좋아요, 댓글 갯수
+    @Column(nullable = false, columnDefinition = "BIGINT DEFAULT 0")
+    private Long likedCount;
+    @Column(nullable = false, columnDefinition = "BIGINT DEFAULT 0")
+    private Long commentCount;
 
     @Enumerated(EnumType.STRING)
     @Column(length = 10, nullable = false, columnDefinition = "VARCHAR(10) DEFAULT 'N'")
     private IsDelete isDelete;
+
+    // 좋아요 증가
+    public void increaseLikeCount() {
+        this.likedCount++;
+    }
+
+    // 좋아요 감소
+    public void decreaseLikeCount() {
+        if (this.likedCount > 0) {
+            this.likedCount--;
+        }
+    }
+
+    // 댓글 수 증가
+    public void increaseCommentCount() {
+        this.commentCount++;
+    }
+
+    // 댓글 수 감소
+    public void decreaseCommentCount() {
+        if (this.commentCount > 0) {
+            this.commentCount--;
+        }
+    }
+
+    // 삭제 상태 변경
+    public void updateIsDelete(IsDelete isDelete) {
+        this.isDelete = IsDelete.Y;
+    }
 
 }
