@@ -12,13 +12,11 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity {
-
+    // 2025-11-23 : token 만료일 표시로 인해 꼬일 염려가 있어서 제거.
     @CreatedDate
-    @Column(updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime createdAt;
-
+    @Column(name="created_at", nullable=false, updatable=false)
+    protected LocalDateTime createdAt;
     @LastModifiedDate
-    @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime updatedAt;
+    @Column(name="updated_at", nullable=false)
+    protected LocalDateTime updatedAt;
 }
