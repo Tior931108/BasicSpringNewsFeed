@@ -9,6 +9,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Entity
 @Table(name = "comments")
@@ -39,12 +41,15 @@ public class Comment extends BaseEntity {
     @Column(length = 10, nullable = false, columnDefinition = "VARCHAR(10) DEFAULT 'N'")
     private IsDelete isDelete;
 
-    public Comment(Post post, User user, String content, IsDelete isDelete) {
+    public Comment(Post post, User user, String content) {
         this.post = post;
         this.user = user;
         this.parent = null; // 대댓글 추후 고도화
         this.content = content;
         this.isDelete = IsDelete.N;
+    }
+    public void commentUpdate(String content) {
+        this.content = content;
     }
 
     // 삭제 상태 변경
