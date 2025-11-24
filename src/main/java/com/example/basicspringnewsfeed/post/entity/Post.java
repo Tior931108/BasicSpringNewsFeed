@@ -43,6 +43,8 @@ public class Post extends BaseEntity {
         this.content = content;
     }
 
+
+
     // 좋아요 증가
     public void increaseLikeCount() {
         this.likedCount++;

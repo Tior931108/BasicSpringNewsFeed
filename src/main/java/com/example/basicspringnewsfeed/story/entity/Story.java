@@ -42,4 +42,9 @@ public class Story extends BaseEntity {
         this.isDelete = IsDelete.Y;
     }
 
+    // 수정 기능
+    public void updateStory(String content, String storyImageUrl) {
+        this.content = content;
+        this.storyImageUrl = storyImageUrl;
+    }
 }
