@@ -24,6 +24,7 @@ public class CommentService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
 
+
     @Transactional
     public CommentCreateResponse save(Long postId, Long userId, CommentCreateRequest request) {
 
