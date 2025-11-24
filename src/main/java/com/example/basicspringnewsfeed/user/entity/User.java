@@ -19,11 +19,11 @@ public class User extends BaseEntity {
     // 2025-11-23 : 가독성 겸 uk 역할을 위한 id로 변경.
     // passwordHash : 보안 사고 방지 겸 적은 것이니 건들지 말아주세요.
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long userId;
     @Column(name="email", length = 50, nullable = false)
     private String email;
-    @Column(name="password_hash", length=254, nullable = false)
-    private String passwordHash;
+    @Column(length=254, nullable = false)
+    private String password;
     // 2025-11-23 : isDeleted와 nickname unique 충돌 우려.
     @Column(length=50, nullable = false)
     private String nickname;
@@ -38,9 +38,9 @@ public class User extends BaseEntity {
     private IsDelete isDelete;*/
 
     @Builder
-    private User(String email, String passwordHash, String nickname, String profileImageUrl, String introduce) {
+    private User(String email, String password, String nickname, String profileImageUrl, String introduce) {
         this.email = email;
-        this.passwordHash = passwordHash;
+        this.password = password;
         this.nickname = nickname;
         this.profileImageUrl = profileImageUrl;
         this.introduce = introduce;
@@ -54,8 +54,8 @@ public class User extends BaseEntity {
     }
 
     // 2025-11-23 changePassword()
-    public void changePassword(String passwordHash){
-        this.passwordHash = passwordHash;
+    public void changePassword(String password){
+        this.password = password;
     }
 
     // 2025-11-23 changeEmail()
