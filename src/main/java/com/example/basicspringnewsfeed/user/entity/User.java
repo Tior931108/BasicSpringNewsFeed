@@ -20,7 +20,7 @@ public class User extends BaseEntity {
     private String email;
     @Column(nullable = false)
     private String password;
-    @Column(length = 50, unique = true, nullable = false)
+    @Column(length = 50, nullable = false)
     private String nickname;
     private String profileImageUrl;
     @Column(length = 200)
@@ -30,7 +30,7 @@ public class User extends BaseEntity {
     @Column(length = 10, nullable = false, columnDefinition = "VARCHAR(10) DEFAULT 'N'")
     private IsDelete isDelete;
 
-    public User(String email, String password, String nickname, String profileImageUrl, String introduce, IsDelete isDelete) {
+    public User(String email, String password, String nickname, String profileImageUrl, String introduce) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
