@@ -1,5 +1,7 @@
 package com.example.basicspringnewsfeed.userpostlike.service;
 
+import com.example.basicspringnewsfeed.common.exception.CustomException;
+import com.example.basicspringnewsfeed.common.exception.ErrorCode;
 import com.example.basicspringnewsfeed.post.entity.Post;
 import com.example.basicspringnewsfeed.post.repository.PostRepository;
 import com.example.basicspringnewsfeed.user.entity.User;
@@ -21,14 +23,14 @@ public class UserPostsLikeService {
 
     public UserPostsLikeResponseDto toggleLike(Long postId, Long userId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         // 내 글에는 좋아요 금지
         if (post.getUser().getUserId().equals(userId)) {
-            return new UserPostsLikeResponseDto(false, post.getLikedCount(), "자신의 게시물엔 좋아요를 누를 수 없습니다.");
+            throw new CustomException(ErrorCode.SELF_LIKE_FORBIDDEN);
         }
 
         /*
