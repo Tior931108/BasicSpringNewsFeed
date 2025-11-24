@@ -9,7 +9,6 @@ import com.example.basicspringnewsfeed.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -19,6 +18,7 @@ public class Controller {
     private final CommentRepository commentRepository;
     private final CommentService commentService;
 
+    //생성
     @PostMapping("/{postId}/{userId}")
     public ResponseEntity<CommentCreateResponse> commentCreate(
             @PathVariable Long postId,
@@ -44,5 +44,15 @@ public class Controller {
             return ResponseEntity.ok().body(responses);
         }
     }
+
+    //수정
+    @PutMapping("/{commentId}")
+    public ResponseEntity<CommentUpdateResponse> commentUpdate(
+            @PathVariable Long commentId,
+            @RequestBody CommentCreateRequest request) {
+        return ResponseEntity.ok(commentService.commentUpdate(commentId, request));
+    }
 }
+
+
 

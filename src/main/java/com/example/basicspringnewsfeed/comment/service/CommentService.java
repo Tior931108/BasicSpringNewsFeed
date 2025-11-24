@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,6 +88,26 @@ public class CommentService {
             dtos.add(dto);
         }
         return dtos;
+    }
+
+    //수정
+    public CommentUpdateResponse commentUpdate(Long commentId, CommentCreateRequest request) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(
+                // 예외 처리 부분 변경하기
+                () -> new IllegalArgumentException("존재하지 않는 댓글입니다.")
+        );
+        comment.commentUpdate(
+                request.getContent()
+        );
+
+        return new CommentUpdateResponse(
+                comment.getCommentId(),
+                comment.getUser(),
+                comment.getPost(),
+                comment.getContent(),
+                comment.getCreatedAt(),
+                comment.getUpdatedAt()
+        );
     }
 }
 
