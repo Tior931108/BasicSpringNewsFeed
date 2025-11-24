@@ -2,6 +2,7 @@ package com.example.basicspringnewsfeed.post.entity;
 
 import com.example.basicspringnewsfeed.common.entity.BaseEntity;
 import com.example.basicspringnewsfeed.common.entity.IsDelete;
+import com.example.basicspringnewsfeed.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -30,6 +31,11 @@ public class Post extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(length = 10, nullable = false, columnDefinition = "VARCHAR(10) DEFAULT 'N'")
     private IsDelete isDelete;
+
+    // 작성자 필드 추가
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     // 좋아요 증가
     public void increaseLikeCount() {
