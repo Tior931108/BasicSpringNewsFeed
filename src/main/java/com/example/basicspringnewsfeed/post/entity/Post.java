@@ -17,6 +17,11 @@ public class Post extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @Column(length = 100, nullable = false)
     private String title;
     @Column(length = 400, nullable = false)
@@ -32,10 +37,13 @@ public class Post extends BaseEntity {
     @Column(length = 10, nullable = false, columnDefinition = "VARCHAR(10) DEFAULT 'N'")
     private IsDelete isDelete;
 
-    // 작성자 필드 추가
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    public Post(User user, String title, String content) {
+        this.user = user;
+        this.title = title;
+        this.content = content;
+    }
+
+
 
     // 좋아요 증가
     public void increaseLikeCount() {

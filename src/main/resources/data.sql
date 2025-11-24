@@ -11,16 +11,16 @@ insert into users (email, password, nickname, profile_image_url, introduce, is_d
 insert into users (email, password, nickname, profile_image_url, introduce, is_delete, created_at, updated_at) values ('tstile8@elpais.com', 'wH3eX3@@p', 'thillan8', 'http://dummyimage.com/204x100.png/5fa2dd/ffffff', '정말로요', 'N', '2025-01-18 14:02:42', '2025-11-17 02:01:16');
 insert into users (email, password, nickname, profile_image_url, introduce, is_delete, created_at, updated_at) values ('jgildroy9@ucoz.com', 'cZ4YhD~,<', 'gfontin9', 'http://dummyimage.com/210x100.png/ff4444/ffffff', '반갑습니다', 'N', '2024-12-30 12:44:19', '2025-08-29 01:01:23');
 
-insert into posts (title, content, liked_count, comment_count, is_delete, created_at, updated_at) values ('테스트1', '게시글1', 3, 9, 'N', '2025-08-14 01:37:32', '2025-03-22 16:34:23');
-insert into posts (title, content, liked_count, comment_count, is_delete, created_at, updated_at) values ('테스트1', '게시글3', 2, 1, 'N', '2025-10-20 11:27:35', '2025-02-13 02:05:01');
-insert into posts (title, content, liked_count, comment_count, is_delete, created_at, updated_at) values ('테스트2', '게시글1', 0, 4, 'N', '2025-07-15 23:12:37', '2025-11-08 02:00:26');
-insert into posts (title, content, liked_count, comment_count, is_delete, created_at, updated_at) values ('테스트1', '게시글2', 0, 6, 'N', '2025-09-09 21:52:16', '2025-08-17 18:05:00');
-insert into posts (title, content, liked_count, comment_count, is_delete, created_at, updated_at) values ('테스트2', '게시글2', 0, 0, 'N', '2025-02-18 10:19:29', '2025-07-17 03:01:18');
-insert into posts (title, content, liked_count, comment_count, is_delete, created_at, updated_at) values ('테스트1', '게시글1', 0, 0, 'N', '2025-03-17 11:16:54', '2025-05-07 22:23:50');
-insert into posts (title, content, liked_count, comment_count, is_delete, created_at, updated_at) values ('테스트1', '게시글3', 0, 0, 'N', '2024-12-19 16:10:20', '2025-08-22 21:05:08');
-insert into posts (title, content, liked_count, comment_count, is_delete, created_at, updated_at) values ('테스트1', '게시글1', 0, 0, 'N', '2025-10-13 07:26:25', '2025-08-04 23:06:02');
-insert into posts (title, content, liked_count, comment_count, is_delete, created_at, updated_at) values ('테스트2', '게시글1', 0, 0, 'N', '2025-06-07 12:45:36', '2025-06-10 00:26:23');
-insert into posts (title, content, liked_count, comment_count, is_delete, created_at, updated_at) values ('테스트2', '게시글3', 0, 0, 'N', '2025-04-26 18:07:27', '2024-11-29 01:07:23');
+insert into posts (user_id, title, content, liked_count, comment_count, is_delete, created_at, updated_at) values (1,'테스트1', '게시글1', 3, 9, 'N', '2025-08-14 01:37:32', '2025-03-22 16:34:23');
+insert into posts (user_id, title, content, liked_count, comment_count, is_delete, created_at, updated_at) values (2,'테스트1', '게시글3', 2, 1, 'N', '2025-10-20 11:27:35', '2025-02-13 02:05:01');
+insert into posts (user_id, title, content, liked_count, comment_count, is_delete, created_at, updated_at) values (3,'테스트2', '게시글1', 0, 4, 'N', '2025-07-15 23:12:37', '2025-11-08 02:00:26');
+insert into posts (user_id, title, content, liked_count, comment_count, is_delete, created_at, updated_at) values (4,'테스트1', '게시글2', 0, 6, 'N', '2025-09-09 21:52:16', '2025-08-17 18:05:00');
+insert into posts (user_id, title, content, liked_count, comment_count, is_delete, created_at, updated_at) values (5,'테스트2', '게시글2', 0, 0, 'N', '2025-02-18 10:19:29', '2025-07-17 03:01:18');
+insert into posts (user_id, title, content, liked_count, comment_count, is_delete, created_at, updated_at) values (6,'테스트1', '게시글1', 0, 0, 'N', '2025-03-17 11:16:54', '2025-05-07 22:23:50');
+insert into posts (user_id, title, content, liked_count, comment_count, is_delete, created_at, updated_at) values (7,'테스트1', '게시글3', 0, 0, 'N', '2024-12-19 16:10:20', '2025-08-22 21:05:08');
+insert into posts (user_id, title, content, liked_count, comment_count, is_delete, created_at, updated_at) values (8,'테스트1', '게시글1', 0, 0, 'N', '2025-10-13 07:26:25', '2025-08-04 23:06:02');
+insert into posts (user_id, title, content, liked_count, comment_count, is_delete, created_at, updated_at) values (9,'테스트2', '게시글1', 0, 0, 'N', '2025-06-07 12:45:36', '2025-06-10 00:26:23');
+insert into posts (user_id, title, content, liked_count, comment_count, is_delete, created_at, updated_at) values (10,'테스트2', '게시글3', 0, 0, 'N', '2025-04-26 18:07:27', '2024-11-29 01:07:23');
 
 insert into stories (user_id, content, story_image_url, is_delete, created_at, updated_at) values (3, '스토리2', 'http://dummyimage.com/128x100.png/ff4444/ffffff', 'N', '2025-09-02 09:24:31', '2025-07-06 23:52:30');
 insert into stories (user_id, content, story_image_url, is_delete, created_at, updated_at) values (8, '스토리2', 'http://dummyimage.com/167x100.png/dddddd/000000', 'N', '2025-05-05 03:56:18', '2025-06-14 05:25:30');

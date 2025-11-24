@@ -24,6 +24,7 @@ public class User extends BaseEntity {
     private String email;
     @Column(length=254, nullable = false)
     private String password;
+
     // 2025-11-23 : isDeleted와 nickname unique 충돌 우려.
     @Column(length=50, nullable = false)
     private String nickname;
@@ -33,9 +34,10 @@ public class User extends BaseEntity {
     private String introduce;
 
     // 2025-11-23 : isDeleted는 User 기본 CRUD 구현 직후로 따로 알아볼 예정.
-    /*@Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     @Column(length = 10, nullable = false, columnDefinition = "VARCHAR(10) DEFAULT 'N'")
-    private IsDelete isDelete;*/
+    private IsDelete isDelete;
+
 
     @Builder
     private User(String email, String password, String nickname, String profileImageUrl, String introduce) {
