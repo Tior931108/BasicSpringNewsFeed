@@ -17,6 +17,7 @@ public class PostResponseDto {
     private final String content;
     private final Long likedCount;
     private final Long commentCount;
+//    private final List<String> hashtags;
     private final List<ImageDto> images;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
@@ -28,6 +29,9 @@ public class PostResponseDto {
         this.content = post.getContent();
         this.likedCount = post.getLikedCount();
         this.commentCount = post.getCommentCount();
+//        this.hashtags = hashtags.stream()
+//                .map(Hashtag::getHashtagName)
+//                .toList();
         this.images = images.stream()
                 .map(ImageDto::new)
                 .toList();

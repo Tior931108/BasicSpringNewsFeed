@@ -84,6 +84,11 @@ public class ImageService {
         return imageRepository.findByPost(post);
     }
 
+    @Transactional(readOnly = true)
+    public List<Image> getImagesByPostId(Long postId) {
+        return imageRepository.findByPost_PostId(postId);
+    }
+
     // 파일 검증
     private void validateImageFile(MultipartFile file) {
         if (file.isEmpty()) {

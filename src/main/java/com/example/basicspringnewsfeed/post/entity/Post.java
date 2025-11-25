@@ -4,6 +4,8 @@ import com.example.basicspringnewsfeed.common.entity.BaseEntity;
 import com.example.basicspringnewsfeed.common.entity.IsDelete;
 import com.example.basicspringnewsfeed.user.entity.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -74,4 +76,13 @@ public class Post extends BaseEntity {
         this.isDelete = IsDelete.Y;
     }
 
+    public void update(
+            @NotBlank(message = "제목을 입력해주세요.")
+            @Size(max = 100, message = "제목은 100자 이하로 입력해주세요.")
+            String title,
+            @NotBlank(message = "내용을 입력해주세요.")
+            @Size(max = 400, message = "내용은 400자 이하로 입력해주세요.") String content) {
+        this.title = title;
+        this.content = content;
+    }
 }
