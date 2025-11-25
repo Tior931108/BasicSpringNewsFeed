@@ -13,6 +13,7 @@ import java.util.List;
 @Setter
 public class PostUpdateRequestDto {
 
+    private Long userId;
     @NotBlank(message = "제목을 입력해주세요.")
     @Size(max = 100, message = "제목은 100자 이하로 입력해주세요.")
     private String title;
