@@ -23,7 +23,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     // 2025-11-24 : filter
-    @Override
     public UserDetails loadUserById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(()-> new UsernameNotFoundException("Invalid credentials" + id)); // 시큐리티 전용 예외

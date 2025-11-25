@@ -3,8 +3,9 @@ package com.example.basicspringnewsfeed.common.entity.auth.controller;
 import com.example.basicspringnewsfeed.common.entity.auth.dto.LoginRequest;
 import com.example.basicspringnewsfeed.common.entity.auth.dto.LoginResponse;
 import com.example.basicspringnewsfeed.common.entity.auth.dto.SignupRequest;
-import com.example.basicspringnewsfeed.common.entity.auth.dto.SignupResponse;
+import com.example.basicspringnewsfeed.common.entity.auth.dto.UserResponse;
 import com.example.basicspringnewsfeed.common.entity.auth.service.AuthService;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,8 +23,8 @@ public class AuthController{
     private final AuthService authService;
 
     @PostMapping("/signup")
-    public ResponseEntity<SignupResponse> signUp(@Valid @RequestBody SignupRequest request){
-        SignupResponse body=authService.signUp(request);
+    public ResponseEntity<UserResponse> signUp(@Valid @RequestBody SignupRequest request){
+        UserResponse body=authService.signUp(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(body);
     }
 
