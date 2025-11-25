@@ -8,16 +8,16 @@ import java.util.Collection;
 import java.util.Collections;
 
 public class CustomUserDetails implements UserDetails {
-    private Long id;
-    private String email;
-    private String nickname;
-    private String password;
+    private final Long id;
+    private final String email;
+    private final String nickname;
+    private final String password;
 
     public CustomUserDetails(User user) {
-        this.id=user.getId();
+        this.id=user.getUserId();
         this.email=user.getEmail();
         this.nickname=user.getNickname();
-        this.password=user.getPasswordHash();
+        this.password=user.getPassword();
     }
 
     // 2025-11-24 : Role까진 다루지 않을 예정.

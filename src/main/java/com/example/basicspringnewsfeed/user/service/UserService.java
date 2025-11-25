@@ -1,13 +1,14 @@
 package com.example.basicspringnewsfeed.user.service;
 
 import com.example.basicspringnewsfeed.user.dto.*;
-import com.example.basicspringnewsfeed.user.dto.UseSummaryResponse;
 import com.example.basicspringnewsfeed.user.entity.User;
 import com.example.basicspringnewsfeed.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -48,25 +49,30 @@ public class UserService{
 
         validatePassword(request.getCurrentPassword(), user);
 
-        validateEmail(request.getNewEmail(), user.getId());
+        validateEmail(request.getNewEmail(), user.getUserId());
 
         user.changeEmail(request.getNewEmail());
     }
-
+    @Transactional
+    public void deleteUser(Long currentUserId, DeleteUserRequest request){
+        User user=getUserOrThrow(currentUserId);
+        validatePassword(request.getPassword(), user);
+        userRepository.deleteById(user.getUserId());
+    }
 
 
     private User getUserOrThrow(Long userId){
         return userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new UsernameNotFoundException("1"));
     }
     private void validatePassword(String currentPassword, User user){
-        if(!passwordEncoder.matches(currentPassword, user.getPasswordHash())){ // matches로 검증
-            throw new PasswordMismatchException(ErrorCode.USER_PASSWORD_MISMATCH);
+        if(!passwordEncoder.matches(currentPassword, user.getPassword())){ // matches로 검증
+            throw new UsernameNotFoundException("1");
         }
     }
     private void validateEmail(String newEmail, Long currentUserId){
-        if(userRepository.existsByEmailAndIdNot(newEmail, currentUserId)){ // 검사
-            throw new ResourceNotFoundException(ErrorCode.USER_EMAIL_ALREADY_EXISTS);
+        if(userRepository.existsByEmailAndUserIdNot(newEmail, currentUserId)){ // 검사
+            throw new UsernameNotFoundException("1");
         }
     }
 }

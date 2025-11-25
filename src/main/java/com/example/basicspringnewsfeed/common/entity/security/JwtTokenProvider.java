@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+
 import java.nio.charset.StandardCharsets;
+
 import java.util.Date;
 
 
@@ -32,7 +34,7 @@ public class JwtTokenProvider {
         this.secretKey=Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8)); // hash
         this.accessTokenValidityMs=accessTokenValidityMs;
     }
-    private String generateToken(CustomUserDetails userDetails){
+    public String generateToken(CustomUserDetails userDetails){
         Date now=new Date();
         Date expiration=new Date(now.getTime()+accessTokenValidityMs);
 
@@ -70,9 +72,9 @@ public class JwtTokenProvider {
         try{
             parseClaims(token);
         }catch(ExpiredJwtException e){
-            throw new JwtAuthenticationException(ErrorCode.JWT_EXPIRED, e);
+            throw new IllegalArgumentException("token expired");
         }catch(JwtException|IllegalArgumentException e){
-            throw new JwtAuthenticationException(ErrorCode.JWT_INVALID, e);
+            throw new IllegalArgumentException(e.getMessage());
         }
     }
 

@@ -14,7 +14,7 @@ public class ChangeEmailRequest {
     @NotBlank @Size(max=50)
     private String newEmail;
 
-    public  ChangeEmailRequest(String currentPassword, String newEmail) {
+    public ChangeEmailRequest(String currentPassword, String newEmail) {
         this.currentPassword = currentPassword;
         this.newEmail = newEmail;
     }

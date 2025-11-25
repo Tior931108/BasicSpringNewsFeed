@@ -1,16 +1,21 @@
 package com.example.basicspringnewsfeed.user.entity;
-
 import com.example.basicspringnewsfeed.common.entity.BaseEntity;
+import com.example.basicspringnewsfeed.common.entity.IsDelete;
+
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.SQLDelete;
 
 @Getter
 @Entity
-@SQLDelete(sql="UPDATE users SET is_delete='Y' WHERE id=?")
+@SQLDelete(sql="UPDATE users SET is_delete = 'Y' WHERE user_id = ?")
+@FilterDef(name="notDeletedUserFilter")
+@Filter(name="notDeletedUserFilter", condition="is_delete ='N'")
 @Table(name="users", // DDL : Index 정의
         uniqueConstraints=@UniqueConstraint(name = "uk_users_email", columnNames="email"),
             indexes={@Index(name="idx_users_nickname", columnList="nickname")})
@@ -32,10 +37,9 @@ public class User extends BaseEntity {
     @Column(length = 200)
     private String introduce;
 
-    // 2025-11-23 : isDeleted는 User 기본 CRUD 구현 직후로 따로 알아볼 예정.
-    /*@Enumerated(EnumType.STRING)
-    @Column(length = 10, nullable = false, columnDefinition = "VARCHAR(10) DEFAULT 'N'")
-    private IsDelete isDelete;*/
+    @Enumerated(EnumType.STRING)
+    @Column(name = "is_delete", length = 10, nullable = false)
+    private IsDelete isDelete = IsDelete.N;
 
     @Builder
     private User(String email, String password, String nickname, String profileImageUrl, String introduce) {
@@ -62,4 +66,5 @@ public class User extends BaseEntity {
     public void changeEmail(String email){
         this.email = email;
     }
+
 }
