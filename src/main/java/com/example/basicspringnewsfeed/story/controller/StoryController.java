@@ -42,7 +42,7 @@ public class StoryController {
     }
 
     // 5. 스토리 삭제
-    @DeleteMapping("/{storyId")
+    @DeleteMapping("/{storyId}")
     public ResponseEntity<MessageResponseDto> deleteStory(@PathVariable Long storyId){
         return ResponseEntity.ok(storyService.deleteStory(storyId));
     }

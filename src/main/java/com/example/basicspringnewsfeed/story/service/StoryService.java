@@ -49,7 +49,7 @@ public class StoryService{
     // 3. 전체 스토리 목록 조회 (다건 조회)
     @Transactional(readOnly = true)
     public List<StoryResponseDto> getAllStories(){
-        List<Story> storyList =storyRepository.findByIdAndIsDeleteOrderByCreatedAtDesc(IsDelete.N);
+        List<Story> storyList =storyRepository.findByIsDeleteOrderByCreatedAtDesc(IsDelete.N);
         return storyList.stream()
                 .map(StoryResponseDto::new)
                 .collect(Collectors.toList());

@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface StoryRepository extends JpaRepository<Story, Long> {
 
 
-    List<Story> findByIdAndIsDeleteOrderByCreatedAtDesc(IsDelete isDelete);
+    List<Story> findByIsDeleteOrderByCreatedAtDesc(IsDelete isDelete);
 
 
     Optional<Story> findByStoryIdAndIsDelete(Long storyId, IsDelete isDelete);
