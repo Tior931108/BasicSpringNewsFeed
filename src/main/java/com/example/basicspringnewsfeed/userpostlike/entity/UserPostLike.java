@@ -1,5 +1,6 @@
 package com.example.basicspringnewsfeed.userpostlike.entity;
 
+import com.example.basicspringnewsfeed.common.entity.BaseEntity;
 import com.example.basicspringnewsfeed.post.entity.Post;
 import com.example.basicspringnewsfeed.user.entity.User;
 import jakarta.persistence.*;
@@ -11,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "user_post_likes")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserPostLike {
+public class UserPostLike extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
