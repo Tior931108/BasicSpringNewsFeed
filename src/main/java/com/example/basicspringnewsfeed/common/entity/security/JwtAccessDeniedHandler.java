@@ -1,7 +1,7 @@
 package com.example.basicspringnewsfeed.common.entity.security;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler{
                        AccessDeniedException accessDeniedException) throws IOException {
 
         response.setStatus(HttpServletResponse.SC_FORBIDDEN); // 403
-        response.setContentType("text/plain;charset=UTF-8");
+        response.setContentType("text/plain;charset=UTF-8"); // encode 한국어
         response.getWriter().write("unauthorized");
     }
 }

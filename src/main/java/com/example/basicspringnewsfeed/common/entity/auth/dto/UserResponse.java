@@ -2,7 +2,7 @@ package com.example.basicspringnewsfeed.common.entity.auth.dto;
 
 import java.time.LocalDateTime;
 
-public record SignupResult(
+public record UserResponse(
         Long id,
         String username,
         String email,
