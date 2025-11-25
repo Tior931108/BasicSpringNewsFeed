@@ -8,15 +8,11 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
-public class ChangeEmailRequest {
+public class DeleteUserRequest {
     @NotBlank @Size(max=254)
-    private String currentPassword;
-    @NotBlank @Size(max=50)
-    private String newEmail;
+    private String password;
 
-    public ChangeEmailRequest(String currentPassword, String newEmail) {
-        this.currentPassword = currentPassword;
-        this.newEmail = newEmail;
+    public DeleteUserRequest(String password) {
+        this.password = password;
     }
-
 }

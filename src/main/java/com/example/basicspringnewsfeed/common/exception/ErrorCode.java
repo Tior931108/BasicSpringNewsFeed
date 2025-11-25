@@ -32,6 +32,11 @@ public enum ErrorCode {
 
     // 5. Follower
 
+    FOLLOWER_NOT_FOUND("FOLLOWER_NOT_FOUND", "존재하지 않는 팔로우입니다.", HttpStatus.NOT_FOUND),
+    FOLLOWING_NOT_FOUND("FOLLOWING_NOT_FOUND", "존재하지 않는 팔로잉입니다.", HttpStatus.NOT_FOUND),
+    FOLLOW_ALREADY_EXIST("FOLLOW_ALREADY_EXIST", "이미 팔로우요청을 한 상태입니다.", HttpStatus.CONFLICT),
+    FOLLOW_NOT_FOUND("FOLLOW_NOT_FOUND", "팔로우 요청을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+
 
 
     // 6. Block
