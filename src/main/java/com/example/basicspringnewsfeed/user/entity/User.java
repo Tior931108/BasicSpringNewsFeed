@@ -29,6 +29,7 @@ public class User extends BaseEntity {
     private String email;
     @Column(length=254, nullable = false)
     private String password;
+
     // 2025-11-23 : isDeleted와 nickname unique 충돌 우려.
     @Column(length=50, nullable = false)
     private String nickname;
@@ -36,7 +37,7 @@ public class User extends BaseEntity {
     private String profileImageUrl;
     @Column(length = 200)
     private String introduce;
-
+  
     @Enumerated(EnumType.STRING)
     @Column(name = "is_delete", length = 10, nullable = false)
     private IsDelete isDelete = IsDelete.N;
