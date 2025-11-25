@@ -1,4 +1,4 @@
-package com.example.basicspringnewsfeed.common.entity.auth.dto;
+package com.example.basicspringnewsfeed.auth.dto;
 
 // service, 보안 계층 등 내부에서 사용.
 // AuthService.login() 리턴값

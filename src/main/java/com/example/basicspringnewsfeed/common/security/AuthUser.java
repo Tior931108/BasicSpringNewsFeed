@@ -1,4 +1,4 @@
-package com.example.basicspringnewsfeed.common.entity.security;
+package com.example.basicspringnewsfeed.common.security;
 
 
 import java.lang.annotation.ElementType;

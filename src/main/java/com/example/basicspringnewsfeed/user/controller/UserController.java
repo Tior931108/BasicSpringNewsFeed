@@ -1,7 +1,7 @@
 package com.example.basicspringnewsfeed.user.controller;
 
-import com.example.basicspringnewsfeed.common.entity.security.AuthUser;
-import com.example.basicspringnewsfeed.common.entity.security.CurrentUser;
+import com.example.basicspringnewsfeed.common.security.AuthUser;
+import com.example.basicspringnewsfeed.common.security.CurrentUser;
 import com.example.basicspringnewsfeed.user.dto.*;
 
 import com.example.basicspringnewsfeed.user.service.UserService;

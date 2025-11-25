@@ -1,4 +1,4 @@
-package com.example.basicspringnewsfeed.common.entity.security;
+package com.example.basicspringnewsfeed.common.security;
 
 import com.example.basicspringnewsfeed.user.entity.User;
 import org.springframework.security.core.GrantedAuthority;

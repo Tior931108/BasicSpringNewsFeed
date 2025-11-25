@@ -1,4 +1,4 @@
-package com.example.basicspringnewsfeed.common.entity.config;
+package com.example.basicspringnewsfeed.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

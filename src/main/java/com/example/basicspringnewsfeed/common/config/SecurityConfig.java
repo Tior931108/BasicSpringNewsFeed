@@ -1,7 +1,7 @@
-package com.example.basicspringnewsfeed.common.entity.config;
+package com.example.basicspringnewsfeed.common.config;
 
 
-import com.example.basicspringnewsfeed.common.entity.security.*;
+import com.example.basicspringnewsfeed.common.security.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

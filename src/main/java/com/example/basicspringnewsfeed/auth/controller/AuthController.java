@@ -1,10 +1,10 @@
-package com.example.basicspringnewsfeed.common.entity.auth.controller;
+package com.example.basicspringnewsfeed.auth.controller;
 
-import com.example.basicspringnewsfeed.common.entity.auth.dto.LoginRequest;
-import com.example.basicspringnewsfeed.common.entity.auth.dto.LoginResponse;
-import com.example.basicspringnewsfeed.common.entity.auth.dto.SignupRequest;
-import com.example.basicspringnewsfeed.common.entity.auth.dto.UserResponse;
-import com.example.basicspringnewsfeed.common.entity.auth.service.AuthService;
+import com.example.basicspringnewsfeed.auth.dto.LoginRequest;
+import com.example.basicspringnewsfeed.auth.dto.LoginResponse;
+import com.example.basicspringnewsfeed.auth.dto.SignupRequest;
+import com.example.basicspringnewsfeed.auth.dto.UserResponse;
+import com.example.basicspringnewsfeed.auth.service.AuthService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

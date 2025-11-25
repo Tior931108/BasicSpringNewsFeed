@@ -1,6 +1,6 @@
-package com.example.basicspringnewsfeed.common.entity.config;
+package com.example.basicspringnewsfeed.common.config;
 
-import com.example.basicspringnewsfeed.common.entity.security.AuthUserArgumentResolver;
+import com.example.basicspringnewsfeed.common.security.AuthUserArgumentResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;

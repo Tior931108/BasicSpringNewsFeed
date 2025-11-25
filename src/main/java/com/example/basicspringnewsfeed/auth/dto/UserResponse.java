@@ -1,4 +1,4 @@
-package com.example.basicspringnewsfeed.common.entity.auth.dto;
+package com.example.basicspringnewsfeed.auth.dto;
 
 import java.time.LocalDateTime;
 

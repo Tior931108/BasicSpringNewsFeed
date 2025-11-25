@@ -1,4 +1,4 @@
-package com.example.basicspringnewsfeed.common.entity.auth.dto;
+package com.example.basicspringnewsfeed.auth.dto;
 
 import com.example.basicspringnewsfeed.user.entity.User;
 import org.springframework.stereotype.Component;

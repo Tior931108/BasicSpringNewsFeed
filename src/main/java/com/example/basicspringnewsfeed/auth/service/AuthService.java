@@ -1,10 +1,12 @@
-package com.example.basicspringnewsfeed.common.entity.auth.service;
+package com.example.basicspringnewsfeed.auth.service;
 
 
-import com.example.basicspringnewsfeed.common.entity.auth.dto.*;
+import com.example.basicspringnewsfeed.auth.dto.*;
+import com.example.basicspringnewsfeed.auth.dto.*;
+import com.example.basicspringnewsfeed.auth.dto.*;
 
-import com.example.basicspringnewsfeed.common.entity.security.CustomUserDetails;
-import com.example.basicspringnewsfeed.common.entity.security.JwtTokenProvider;
+import com.example.basicspringnewsfeed.common.security.CustomUserDetails;
+import com.example.basicspringnewsfeed.common.security.JwtTokenProvider;
 import com.example.basicspringnewsfeed.user.entity.User;
 import com.example.basicspringnewsfeed.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +14,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.example.basicspringnewsfeed.common.entity.auth.dto.*;
 
 
 @Service
