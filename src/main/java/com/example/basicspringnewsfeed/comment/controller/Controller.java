@@ -7,8 +7,10 @@ import com.example.basicspringnewsfeed.comment.dto.response.CommentUpdateRespons
 import com.example.basicspringnewsfeed.comment.repository.CommentRepository;
 import com.example.basicspringnewsfeed.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -19,6 +21,7 @@ public class Controller {
     private final CommentService commentService;
 
     //생성
+    //JWT 사용 시 ("/{postId}") 변경, 유저는 토큰에서
     @PostMapping("/{postId}/{userId}")
     public ResponseEntity<CommentCreateResponse> commentCreate(
             @PathVariable Long postId,
@@ -51,6 +54,14 @@ public class Controller {
             @PathVariable Long commentId,
             @RequestBody CommentCreateRequest request) {
         return ResponseEntity.ok(commentService.commentUpdate(commentId, request));
+    }
+
+    //삭제
+
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<Void> commentDelete(@PathVariable Long commentId) {
+        commentService.commentDelete(commentId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
 
