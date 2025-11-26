@@ -9,6 +9,12 @@ import org.springframework.http.HttpStatus;
 
 public enum ErrorCode {
     // Code, message, status 순서대로 설정
+    // 0. JWT
+    JWT_TOKEN_EXPIRED("JWT_TOKEN_EXPIRED", "토큰이 만료되었습니다.", HttpStatus.UNAUTHORIZED),
+    JWT_TOKEN_INVALID("JWT_TOKEN_INVALID", "유효하지 않은 토큰입니다.", HttpStatus.UNAUTHORIZED),
+    AUTH_INVALID_CREDENTIAL("AUTH_INVALID_CREDENTIAL", "이메일 혹은 비밀번호가 다릅니다.", HttpStatus.UNAUTHORIZED),
+    AUTH_EMAIL_NOT_FOUND("AUTH_EMAIL_NOT_FOUND", "이메일이 다릅니다.", HttpStatus.NOT_FOUND),
+
 
     // 1. Story
 

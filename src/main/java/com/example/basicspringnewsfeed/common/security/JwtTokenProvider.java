@@ -2,6 +2,8 @@ package com.example.basicspringnewsfeed.common.security;
 
 
 
+import com.example.basicspringnewsfeed.common.exception.ErrorCode;
+import com.example.basicspringnewsfeed.common.exception.JwtAuthenticationException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -72,9 +74,9 @@ public class JwtTokenProvider {
         try{
             parseClaims(token);
         }catch(ExpiredJwtException e){
-            throw new IllegalArgumentException("token expired");
+            throw new JwtAuthenticationException(ErrorCode.JWT_TOKEN_EXPIRED, e);
         }catch(JwtException|IllegalArgumentException e){
-            throw new IllegalArgumentException(e.getMessage());
+            throw new JwtAuthenticationException(ErrorCode.JWT_TOKEN_INVALID, e);
         }
     }
 
