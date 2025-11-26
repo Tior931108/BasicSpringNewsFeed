@@ -33,7 +33,7 @@ public class User extends BaseEntity {
     // 2025-11-23 : isDeleted와 nickname unique 충돌 우려.
     @Column(length=50, nullable = false)
     private String nickname;
-    @Column(length=254, nullable = false)
+    @Column(length=254)
     private String profileImageUrl;
     @Column(length = 200)
     private String introduce;
