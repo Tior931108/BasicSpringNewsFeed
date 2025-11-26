@@ -22,6 +22,10 @@ public class SignupRequest {
     @NotBlank @Size(min=8, max=100)
     private String password;
 
+    private String profileImageUrl;
+
+    private String introduce;
+
     public SignupRequest(String email, String nickname, String password) {
         this.email = email;
         this.nickname = nickname;

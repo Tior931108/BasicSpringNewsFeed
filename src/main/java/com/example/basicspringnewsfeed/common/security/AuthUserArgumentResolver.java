@@ -27,18 +27,36 @@ public class AuthUserArgumentResolver implements HandlerMethodArgumentResolver{
     // 2025-11-24 : 실제 Parameter 값 생성.
     @Override
     public Object resolveArgument(
-        MethodParameter parameter,
-        ModelAndViewContainer mavContainer,
-        NativeWebRequest webRequest,
-        WebDataBinderFactory binderFactory
+            MethodParameter parameter,
+            ModelAndViewContainer mavContainer,
+            NativeWebRequest webRequest,
+            WebDataBinderFactory binderFactory
     ){
-        // 이 요청을 보낸 유저의 인증 정보 : Authentication.
-        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
-        // 필터에서 인증을 안했거나, JWT를 통해 인증 롼료된 유저가 아니라면, 예외.
-        if(authentication==null||!(authentication.getPrincipal() instanceof CustomUserDetails principal)){
-            throw new AccessDeniedException("Invalid Access");
+//        // 이 요청을 보낸 유저의 인증 정보 : Authentication.
+//        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+//        // 필터에서 인증을 안했거나, JWT를 통해 인증 롼료된 유저가 아니라면, 예외.
+//        if(authentication==null||!(authentication.getPrincipal() instanceof CustomUserDetails principal)){
+//            throw new AccessDeniedException("Invalid Access");
+//        }
+//        // Controller용 DTO로 변환.
+//        return CurrentUser.from(principal);
+
+
+        // SecurityContext에서 인증 정보 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalStateException("인증되지 않은 사용자입니다.");
         }
-        // Controller용 DTO로 변환.
-        return CurrentUser.from(principal);
+
+        // Principal에서 CustomUserDetails 추출
+        Object principal = authentication.getPrincipal();
+
+        if (!(principal instanceof CustomUserDetails userDetails)) {
+            throw new IllegalStateException("올바르지 않은 인증 정보입니다.");
+        }
+
+        // CurrentUser로 변환해서 반환
+        return CurrentUser.from(userDetails);
     }
 }

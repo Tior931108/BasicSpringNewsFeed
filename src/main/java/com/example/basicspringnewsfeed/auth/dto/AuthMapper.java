@@ -11,6 +11,8 @@ public class AuthMapper {
         return User.builder()
                 .nickname(request.getNickname())
                 .email(request.getEmail())
+                .profileImageUrl(request.getProfileImageUrl())
+                .introduce(request.getIntroduce())
                 .password(encodedPassword)
                 .build();
     }

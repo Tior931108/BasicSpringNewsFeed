@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -54,6 +55,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 
         // 6). 요청 정보를 details에 채우기. : auditing log, 어디서 로그인 했는지, 보안 정책 등.
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+        // ✅ 핵심! SecurityContext에 인증 정보 설정
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
         filterChain.doFilter(request, response);
     }

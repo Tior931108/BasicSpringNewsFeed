@@ -27,7 +27,7 @@ public class SecurityConfig{
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     private static final String[] PUBLIC_ENDPOINTS={
-            "/api/auth/**",
+            "/auth/**",
             "/h2-console/**",
             "/actuator/health"
     };
