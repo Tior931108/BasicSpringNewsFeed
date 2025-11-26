@@ -1,28 +1,33 @@
 package com.example.basicspringnewsfeed.post.service;
 
+import com.example.basicspringnewsfeed.comment.entity.Comment;
 import com.example.basicspringnewsfeed.common.entity.IsDelete;
 import com.example.basicspringnewsfeed.common.exception.CustomException;
 import com.example.basicspringnewsfeed.common.exception.ErrorCode;
 import com.example.basicspringnewsfeed.common.security.CurrentUser;
+import com.example.basicspringnewsfeed.hashtag.entity.Hashtag;
+import com.example.basicspringnewsfeed.hashtag.service.HashtagService;
+import com.example.basicspringnewsfeed.hashtagandpost.entity.HashtagPost;
 import com.example.basicspringnewsfeed.image.entity.Image;
 import com.example.basicspringnewsfeed.image.service.ImageService;
 import com.example.basicspringnewsfeed.post.dto.PostCreateRequestDto;
+import com.example.basicspringnewsfeed.post.dto.PostDetailResponseDto;
 import com.example.basicspringnewsfeed.post.dto.PostResponseDto;
 import com.example.basicspringnewsfeed.post.dto.PostUpdateRequestDto;
 import com.example.basicspringnewsfeed.post.entity.Post;
 import com.example.basicspringnewsfeed.post.repository.PostRepository;
 import com.example.basicspringnewsfeed.user.entity.User;
 import com.example.basicspringnewsfeed.user.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -54,8 +59,6 @@ public class PostService {
             images = imageService.uploadImages(post, request.getImages());
         }
 
-        // 응답 생성 : 해시태그 추가 예정
-        return new PostResponseDto(post, Objects.requireNonNull(images));
         // 게시글 저장
         postRepository.save(post);
 
@@ -66,13 +69,21 @@ public class PostService {
         * Post의 ID가 없음 (null)
         * HashtagPost 저장 시 foreign key 오류 발생
          */
-        // 해시태그 추가
+        // 4. 해시태그 추가
         if (request.getHashtags() != null && !request.getHashtags().isEmpty()) {
+            System.out.println("해시태그 저장 전: " + request.getHashtags());
             hashtagService.addHashtagsToPost(post, request.getHashtags());
+            System.out.println("해시태그 저장 후: " + post.getPostHashtags());
         }
 
-        // 응답 생성 - 해시태그 추가
-        List<Hashtag> hashtags = post.getPostHashtags().stream()
+        // 5. DB에서 다시 조회 (최신 데이터)
+        Post savedPost = postRepository.findByIdWithHashtagsAndImages(post.getPostId())
+                .orElseThrow();
+
+        System.out.println("DB 조회 후 해시태그: " + savedPost.getPostHashtags());
+
+        // 응답 생성
+        List<Hashtag> hashtags = savedPost.getPostHashtags().stream()
                 .map(HashtagPost::getHashtag)
                 .toList();
 
@@ -82,12 +93,19 @@ public class PostService {
 
     // 게시글 전체 조회 (페이징)
     @Transactional(readOnly = true)
-    public Page<PostResponseDto> getPosts(Pageable pageable) {
-        // 삭제되지 않은 게시글만 조회
-        Page<Post> posts = postRepository.findByIsDeleteOrderByUpdatedAtDesc(
-                IsDelete.N,
-                pageable
-        );
+    public Page<PostResponseDto> getPosts(Pageable pageable,String sortBy) {
+        // sortBy 값에 따라 정렬 결정
+        Sort sort = Sort.by("updatedAt").descending(); // 기본 최신순
+        if ("likes".equalsIgnoreCase(sortBy)) {
+            sort = Sort.by("likedCount").descending()
+                    .and(Sort.by("updatedAt").descending()); // 좋아요 같으면 최신순
+        }
+
+        // 전달받은 pageable에 sort 적용
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+
+        // Repository 호출
+        Page<Post> posts = postRepository.findByIsDelete(IsDelete.N, sortedPageable);
 
         // 11.26 성주연 - 해시태그
         // Post를 PostResponseDto로 변환
@@ -96,7 +114,7 @@ public class PostService {
         return posts.map(post -> {
             List<Hashtag> hashtags = hashtagService.getHashtagsByPost(post);
             List<Image> images = imageService.getImagesByPostId(post.getPostId());
-            return new PostResponseDto(post,images,hashtags);
+            return new PostResponseDto(post, images, hashtags);
         });
     }
 
@@ -169,9 +187,11 @@ public class PostService {
 
         return posts.stream()
                 .map(post -> {
-//                    List<Hashtag> hashtags = hashtagService.getHashtagsByPost(post.getPostId());
+                    List<Hashtag> hashtags = post.getPostHashtags().stream()  // ← 추가 11.26성주연
+                            .map(HashtagPost::getHashtag)
+                            .toList();
                     List<Image> images = imageService.getImagesByPostId(post.getPostId());
-                    return new PostResponseDto(post, images);
+                    return new PostResponseDto(post, images, hashtags);  // ← 3개 전달 11.26성주연
                 })
                 .toList();
     }
@@ -185,6 +205,10 @@ public class PostService {
         Post post = postRepository.findByIdWithHashtagsAndImages(postId)
                 .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
 
+        // 이미지와 댓글은 따로 조회
+        List<Image> images = imageService.getImagesByPost(post);
+        List<Comment> comments = post.getComments();  // Lazy Loading
+
         return convertToDetailDto(post);
     }
 
@@ -197,8 +221,6 @@ public class PostService {
      * @return 해당 해시태그가 있는 게시글들
      * 전체글조회로 조회 (댓글X)
      */
-
-
     public Page<PostResponseDto> getPostsByHashtag(String hashtag, int page, int size) {
         if (hashtag == null || hashtag.trim().isEmpty()) {
             throw new CustomException(ErrorCode.INVALID_HASHTAG);

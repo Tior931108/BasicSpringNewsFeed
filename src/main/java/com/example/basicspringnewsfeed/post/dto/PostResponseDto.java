@@ -27,8 +27,8 @@ public class PostResponseDto {
         this.postId = post.getPostId();
         this.title = post.getTitle();
         this.content = post.getContent();
-        this.hashtags = post.getPostHashtags().stream()  // 해시태그 - 성주연
-                .map(ph -> ph.getHashtag().getHashtagName())
+        this.hashtags = hashtags.stream()
+                .map(Hashtag::getHashtagName)
                 .toList();
         this.likedCount = post.getLikedCount();
         this.commentCount = post.getCommentCount();

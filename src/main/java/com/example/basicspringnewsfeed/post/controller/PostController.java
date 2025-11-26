@@ -17,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -59,9 +58,10 @@ public class PostController {
     @GetMapping
     public ResponseEntity<Page<PostResponseDto>> getPosts(
             @PageableDefault(size = 10, sort = "updatedAt", direction = Sort.Direction.DESC)
-            Pageable pageable) {
+            Pageable pageable,
+            @RequestParam(defaultValue = "recent") String sortBy) {  // ← 추가
 
-        Page<PostResponseDto> response = postService.getPosts(pageable);
+        Page<PostResponseDto> response = postService.getPosts(pageable, sortBy);  // ← sortBy 전달
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -119,15 +119,16 @@ public class PostController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        // 해시태그 파라미터가 있으면 해시태그 검색
+        // 해시태그가 있으면 postId 무시하고 해시태그 검색
         if (hashtag != null && !hashtag.trim().isEmpty()) {
             Page<PostResponseDto> posts = postService.getPostsByHashtag(hashtag, page, size);
             return ResponseEntity.ok(posts);
         }
 
-        // 해시태그 없으면 상세 조회
+        // 해시태그 없으면 기존대로 특정 게시글 상세 조회
         PostDetailResponseDto post = postService.getPostDetail(postId);
         return ResponseEntity.ok(post);
     }
+
 
 }

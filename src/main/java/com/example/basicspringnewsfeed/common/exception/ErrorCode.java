@@ -49,6 +49,12 @@ public enum ErrorCode {
 
     // Like
     SELF_LIKE_FORBIDDEN("SELF_LIKE_FORBIDDEN", "본인의 게시글에는 좋아요를 누를 수 없습니다.", HttpStatus.BAD_REQUEST),
+    LIKE_NOT_FOUND("LIKE_NOT_FOUND", "좋아요가 존재하지 않습니다.", HttpStatus.NOT_FOUND),
+
+
+    // Hashtag
+    INVALID_HASHTAG("INVALID_HASHTAG", "유효하지 않은 해시태그입니다.", HttpStatus.BAD_REQUEST),
+
     ;
 
     private final String code;
