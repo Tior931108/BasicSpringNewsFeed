@@ -19,12 +19,14 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -47,18 +49,17 @@ public class PostService {
 
         // 게시글 생성
         Post post = new Post(user, request.getTitle(), request.getContent());
+        // 게시글 저장
+        postRepository.save(post);
 
         // 아미지 업로드 및 저장
-        List<Image> images = new ArrayList<>();
+        List<Image> images = null;
         if (request.getImages() != null && !request.getImages().isEmpty()) {
             images = imageService.uploadImages(post, request.getImages());
         }
 
-        // 게시글 저장
-        postRepository.save(post);
-
         // 응답 생성 : 해시태그 추가 예정
-        return new PostResponseDto(post, images);
+        return new PostResponseDto(post, Objects.requireNonNull(images));
     }
 
     // 게시글 전체 조회 (페이징)
@@ -83,12 +84,12 @@ public class PostService {
     public PostResponseDto updatePost(Long postId, @Valid PostUpdateRequestDto request, CurrentUser currentUser) {
         // 게시글 조회 및 권한 확인
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new EntityNotFoundException("게시글을 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
 
         // 수정 권한 체크
-//        if (!post.getUser().getUserId().equals(currentUser.id())) {
-//            throw new IllegalStateException("수정 권한이 없습니다.");
-//        }
+        if (!post.getUser().getUserId().equals(currentUser.id())) {
+            throw new CustomException(ErrorCode.ONLY_OWNER_UPDATE);
+        }
 
         // 게시글 내용 수정
         post.update(request.getTitle(), request.getContent());
@@ -119,12 +120,12 @@ public class PostService {
     public void deletePost(Long postId, CurrentUser currentUser) {
         // 게시글 조회 및 권한 확인
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new EntityNotFoundException("게시글을 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
 
         // 삭제 권한 체크
-//        if (!post.getUser().getUserId().equals(currentUser.id())) {
-//            throw new IllegalStateException("삭제 권한이 없습니다.");
-//        }
+        if (!post.getUser().getUserId().equals(currentUser.id())) {
+            throw new CustomException(ErrorCode.ONLY_OWNER_DELETE);
+        }
 
         // 해시태그 관계 삭제 및 카운트 감소
 //        hashtagAndPostService.removeHashtagsFromPost(postId);
@@ -134,5 +135,23 @@ public class PostService {
 
         // 게시글 삭제 (삭제 여부 변경)
         post.updateIsDelete(IsDelete.Y);
+    }
+
+    // 댓글 많은 순 TOP3
+    @Transactional(readOnly = true)
+    public List<PostResponseDto> getTop3PostsByCommentCount() {
+
+        Pageable topThree = PageRequest.of(0, 3);
+
+        List<Post> posts = postRepository
+                .findTop3ByIsDeleteOrderByCommentCountDescUpdatedAtDesc(IsDelete.N, topThree);
+
+        return posts.stream()
+                .map(post -> {
+//                    List<Hashtag> hashtags = hashtagService.getHashtagsByPost(post.getPostId());
+                    List<Image> images = imageService.getImagesByPostId(post.getPostId());
+                    return new PostResponseDto(post, images);
+                })
+                .toList();
     }
 }

@@ -23,8 +23,8 @@ public class PostCreateRequestDto {
     private String content;
 
     // 해시태그 리스트
-    private List<String> hashtags = new ArrayList<>();
+//    private List<String> hashtags;
 
     // 이미지 파일들
-    private List<MultipartFile> images = new ArrayList<>();
+    private List<MultipartFile> images;
 }

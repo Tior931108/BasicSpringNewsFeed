@@ -16,6 +16,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/posts")
@@ -27,7 +30,26 @@ public class PostController {
     // 게시글 작성
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<PostResponseDto> createPost(
-            @Valid @RequestBody PostCreateRequestDto request) {
+            @Valid @ModelAttribute PostCreateRequestDto request) {
+
+//        System.out.println("=== Controller 진입 ===");
+//        System.out.println("userId: " + request.getUserId());
+//        System.out.println("title: " + request.getTitle());
+//        System.out.println("content: " + request.getContent());
+//        System.out.println("images: " + request.getImages());
+//        System.out.println("images size: " + (request.getImages() != null ? request.getImages().size() : "null"));
+//
+//        if (request.getImages() != null) {
+//            for (int i = 0; i < request.getImages().size(); i++) {
+//                MultipartFile file = request.getImages().get(i);
+//                System.out.println("File " + i + ":");
+//                System.out.println("  - 파일명: " + file.getOriginalFilename());
+//                System.out.println("  - 크기: " + file.getSize());
+//                System.out.println("  - 비어있음?: " + file.isEmpty());
+//                System.out.println("  - ContentType: " + file.getContentType());
+//            }
+//        }
+
         PostResponseDto response = postService.createPost(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -42,11 +64,19 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    // 게시글 댓글 많은순 TOP3 조회
+    @GetMapping("/top")
+    public ResponseEntity<List<PostResponseDto>> getTop3Posts() {
+        List<PostResponseDto> posts = postService.getTop3PostsByCommentCount();
+        return ResponseEntity.status(HttpStatus.OK).body(posts);
+    }
+
+
     // 게시글 수정
     @PutMapping(value = "/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<PostResponseDto> updatePost(
             @PathVariable Long postId,
-            @Valid @RequestBody PostUpdateRequestDto request,
+            @Valid @ModelAttribute PostUpdateRequestDto request,
             @AuthUser CurrentUser currentUser) {
 
         PostResponseDto response = postService.updatePost(postId, request, currentUser);
