@@ -1,7 +1,10 @@
 package com.example.basicspringnewsfeed.post.entity;
 
+import com.example.basicspringnewsfeed.comment.entity.Comment;
 import com.example.basicspringnewsfeed.common.entity.BaseEntity;
 import com.example.basicspringnewsfeed.common.entity.IsDelete;
+import com.example.basicspringnewsfeed.hashtagandpost.entity.HashtagPost;
+import com.example.basicspringnewsfeed.image.entity.Image;
 import com.example.basicspringnewsfeed.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -9,6 +12,9 @@ import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -85,4 +91,14 @@ public class Post extends BaseEntity {
         this.title = title;
         this.content = content;
     }
+
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<HashtagPost> postHashtags = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
+    private List<Image> images = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
+    private List<Comment> comments = new ArrayList<>();
+
 }
