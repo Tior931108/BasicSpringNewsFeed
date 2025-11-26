@@ -47,10 +47,15 @@ public enum ErrorCode {
     FOLLOWING_NOT_FOUND("FOLLOWING_NOT_FOUND", "존재하지 않는 팔로잉입니다.", HttpStatus.NOT_FOUND),
     FOLLOW_ALREADY_EXIST("FOLLOW_ALREADY_EXIST", "이미 팔로우요청을 한 상태입니다.", HttpStatus.CONFLICT),
     FOLLOW_NOT_FOUND("FOLLOW_NOT_FOUND", "팔로우 요청을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
-
+    FOLLOWER_UNAUTHORIZED_ACCESS("FOLLOWER_UNAUTHORIZED_ACCESS", "팔로우 승낙은 본인만 가능합니다.", HttpStatus.UNAUTHORIZED),
+    FOLLOW_UNAUTHORIZED_ACCESS("FOLLOW_UNAUTHORIZED_ACCESS", "팔로우 삭제는 본인만 가능합니다.", HttpStatus.UNAUTHORIZED),
 
 
     // 6. Block
+    BLOCKED_USER_NOT_FOUND("BLOCKED_USER_NOT_FOUND", "존재하지 않는 차단 유저입니다.", HttpStatus.NOT_FOUND),
+    BLOCK_NOT_FOUND("BLOCKED_NOT_FOUND", "존재하지 않는 차단 내역입니다.", HttpStatus.NOT_FOUND),
+    BLOCK_ALREADY_EXIST("BLOCK_ALREADY_EXIST", "이미 차단한 유저입니다.", HttpStatus.CONFLICT),
+    BLOCK_UNAUTHORIZED_ACCESS("UNAUTHORIZED_ACCESS", "본인만 차단 유저를 삭제할 수 있습니다.", HttpStatus.UNAUTHORIZED),  // 자격증명 예외처리
 
 
     // Like

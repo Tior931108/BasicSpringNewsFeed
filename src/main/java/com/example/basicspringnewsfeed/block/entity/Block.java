@@ -1,6 +1,5 @@
 package com.example.basicspringnewsfeed.block.entity;
 
-import com.example.basicspringnewsfeed.post.entity.Post;
 import com.example.basicspringnewsfeed.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

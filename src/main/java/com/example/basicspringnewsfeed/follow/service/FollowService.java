@@ -3,6 +3,7 @@ package com.example.basicspringnewsfeed.follow.service;
 
 import com.example.basicspringnewsfeed.common.exception.CustomException;
 import com.example.basicspringnewsfeed.common.exception.ErrorCode;
+import com.example.basicspringnewsfeed.common.security.CurrentUser;
 import com.example.basicspringnewsfeed.follow.dto.FollowRequest;
 import com.example.basicspringnewsfeed.follow.dto.FollowResponse;
 import com.example.basicspringnewsfeed.follow.dto.FollowerInfo;
@@ -31,20 +32,20 @@ public class FollowService {
     public FollowResponse follow(FollowRequest followRequest) {
         // User 조회하기
         User follower = userRepository.findById(followRequest.getFollowerId()).orElseThrow(
-                () -> new CustomException(ErrorCode.FOLLOWER_NOT_FOUND)
+                () -> new CustomException(ErrorCode.FOLLOWER_NOT_FOUND)  // Follower 실제 있는 User인지 검증
         );
         User following = userRepository.findById(followRequest.getFollowingId()).orElseThrow(
-                () -> new CustomException(ErrorCode.FOLLOWING_NOT_FOUND)
+                () -> new CustomException(ErrorCode.FOLLOWING_NOT_FOUND)  // Following 실제 있는 User인지 검증
         );
 
         // 이미 받은 팔로우 요청인지 확인하기
         if(followRepository.existsByFollowerIdAndFollowingId(follower, following)) {
-            throw new CustomException(ErrorCode.FOLLOW_ALREADY_EXIST);
+            throw new CustomException(ErrorCode.FOLLOW_ALREADY_EXIST);   // 이미 팔로우를 신청한 관계인지 확인하기
         }
 
         // 팔로우 요청 생성하기
         Follow follow = new Follow(follower, following);
-
+        follow = followRepository.save(follow);  // 차단 기록 DB에 저장
         followRepository.save(follow);
         return new FollowResponse(
                 follow.getFollowId(),
@@ -54,12 +55,18 @@ public class FollowService {
         );
     }
 
-    // 팔로워 승인
+
+    // 팔로우 승인
     @Transactional
-    public FollowResponse approveFollow(Long followId) {
+    public FollowResponse approveFollow(Long followId, CurrentUser currentUser) {
         Follow follow = followRepository.findById(followId).orElseThrow(
-                () -> new CustomException(ErrorCode.FOLLOW_NOT_FOUND)
+                () -> new CustomException(ErrorCode.FOLLOW_NOT_FOUND)  // 없는 팔로우 예외처리
         );
+        // 팔로우 승인 권한 예외처리
+        if (!follow.getFollowerId().getUserId().equals(currentUser.id())) {
+            throw new CustomException(ErrorCode.FOLLOWER_UNAUTHORIZED_ACCESS);
+        }
+
         follow.updateAccepted(); // 상태 변경
         return new FollowResponse(
                 follow.getFollowId(),
@@ -70,12 +77,16 @@ public class FollowService {
     }
 
 
-    // 팔로워 거절
+    // 팔로우 거절
     @Transactional
-    public FollowResponse rejectFollow(Long followId) {
+    public FollowResponse rejectFollow(Long followId, CurrentUser currentUser) {
         Follow follow = followRepository.findById(followId).orElseThrow(
-                () -> new CustomException(ErrorCode.FOLLOW_NOT_FOUND)
+                () -> new CustomException(ErrorCode.FOLLOW_NOT_FOUND)  // 없는 팔로우 예외처리
         );
+        // 팔로우 거절 권한 예외처리
+        if (!follow.getFollowerId().getUserId().equals(currentUser.id())) {
+            throw new CustomException(ErrorCode.FOLLOWER_UNAUTHORIZED_ACCESS);
+        }
 
         follow.updateRejected();
 
@@ -87,12 +98,17 @@ public class FollowService {
         );
     }
 
+
     // 팔로우 삭제
     @Transactional
-    public void deleteFollow(Long followId) {
+    public void deleteFollow(Long followId, CurrentUser currentUser) {
         Follow follow = followRepository.findById(followId).orElseThrow(
-                () -> new CustomException(ErrorCode.FOLLOW_NOT_FOUND)
+                () -> new CustomException(ErrorCode.FOLLOW_NOT_FOUND)   // 없는 팔로우 예외처리
         );
+        // 팔로우 삭제 권한 예외처리
+        if (!follow.getFollowerId().getUserId().equals(currentUser.id())) {
+            throw new CustomException(ErrorCode.FOLLOW_UNAUTHORIZED_ACCESS);
+        }
         followRepository.delete(follow);
     }
 
@@ -101,9 +117,9 @@ public class FollowService {
     @Transactional(readOnly = true)
     public List<FollowerInfo> getFollowers(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));  // 조회하려는 User 존재하지 않음
 
-        // user를 팔로우하는 Follow 엔티티 목록
+        // user를 팔로우하는 Follow 목록
         List<Follow> followers = followRepository.findByFollowingId(user);
 
         // 반환 DTO 리스트
@@ -122,7 +138,7 @@ public class FollowService {
     @Transactional(readOnly = true)
     public List<FollowingInfo> getFollowing(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));  // 조회하려는 User 존재하지 않음
 
         // user가 팔로우하는 Follow 엔티티 목록
         List<Follow> followings = followRepository.findByFollowerId(user);
