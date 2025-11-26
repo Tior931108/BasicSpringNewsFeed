@@ -40,6 +40,10 @@ public enum ErrorCode {
 
 
     // 6. Block
+    BLOCKED_USER_NOT_FOUND("BLOCKED_USER_NOT_FOUND", "존재하지 않는 차단 유저입니다.", HttpStatus.NOT_FOUND),
+    BLOCK_NOT_FOUND("BLOCKED_NOT_FOUND", "존재하지 않는 차단 내역입니다.", HttpStatus.NOT_FOUND),
+    BLOCK_ALREADY_EXIST("BLOCK_ALREADY_EXIST", "이미 차단한 유저입니다.", HttpStatus.CONFLICT),
+    BLOCK_UNAUTHORIZED_ACCESS("UNAUTHORIZED_ACCESS", "본인만 차단 유저를 삭제할 수 있습니다.", HttpStatus.UNAUTHORIZED),  // 자격증명 예외처리
 
 
     // Like
