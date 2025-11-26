@@ -15,7 +15,7 @@ public class UserPostsLikeController {
 
     @PostMapping("/{postId}")
     public ResponseEntity<UserPostsLikeResponseDto> toggleLike(
-            @PathVariable Long postId,
+            @PathVariable Long postId,  //jwt검증추가해야함
             @RequestBody LikeToggleRequestDto request) {
 
         UserPostsLikeResponseDto response = userPostsLikeService.toggleLike(postId, request.userId());
