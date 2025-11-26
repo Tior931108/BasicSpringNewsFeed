@@ -22,12 +22,17 @@ public enum ErrorCode {
 
     // 3. User
     USER_NOT_FOUND("USER_NOT_FOUND", "존재하지 않는 유저입니다.", HttpStatus.NOT_FOUND),
+    ONLY_OWNER_UPDATE("ONLY_OWNER_USER_UPDATE", "본인 정보만 수정할 수 있습니다.", HttpStatus.FORBIDDEN),
+    ONLY_OWNER_DELETE("ONLY_OWNER_USER_DELETE", "본인 정보만 삭제할 수 있습니다.", HttpStatus.FORBIDDEN),
 
 
 
-    // 4. Post
+    // 4. Post & Image
     POST_NOT_FOUND("POST_NOT_FOUND", "게시글이 존재하지 않습니다.", HttpStatus.NOT_FOUND),
-
+    IMAGE_NOT_FOUND("IMAGE_NOT_FOUND", "이미지가 존재하지 않습니다.", HttpStatus.NOT_FOUND),
+    ONLY_IMAGE_FILE("ONLY_IMAGE_FILE", "이미지 파일형식만 가능합니다.", HttpStatus.UNSUPPORTED_MEDIA_TYPE),
+    PAYLOAD_TOO_LARGE("PAYLOAD_TOO_LARGE", "파일 크기는 5MB까지만 가능합니다.", HttpStatus.PAYLOAD_TOO_LARGE),
+    INTERNAL_SERVER_ERROR("INTERNAL_SERVER_ERROR", "파일 업로드에 실패하였습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
 
 
     // 5. Follower
@@ -44,10 +49,8 @@ public enum ErrorCode {
 
     // Like
     SELF_LIKE_FORBIDDEN("SELF_LIKE_FORBIDDEN", "본인의 게시글에는 좋아요를 누를 수 없습니다.", HttpStatus.BAD_REQUEST),
-
-
-
     ;
+
     private final String code;
     private final String message;
     private final HttpStatus httpStatus;
