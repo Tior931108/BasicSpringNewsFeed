@@ -1,5 +1,7 @@
 package com.example.basicspringnewsfeed.user.service;
 
+import com.example.basicspringnewsfeed.common.exception.CustomException;
+import com.example.basicspringnewsfeed.common.exception.ErrorCode;
 import com.example.basicspringnewsfeed.user.dto.*;
 import com.example.basicspringnewsfeed.user.entity.User;
 import com.example.basicspringnewsfeed.user.repository.UserRepository;
@@ -63,16 +65,16 @@ public class UserService{
 
     private User getUserOrThrow(Long userId){
         return userRepository.findById(userId)
-                .orElseThrow(() -> new UsernameNotFoundException("1"));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
     }
     private void validatePassword(String currentPassword, User user){
         if(!passwordEncoder.matches(currentPassword, user.getPassword())){ // matches로 검증
-            throw new UsernameNotFoundException("1");
+            throw new CustomException(ErrorCode.AUTH_INVALID_CREDENTIAL);
         }
     }
     private void validateEmail(String newEmail, Long currentUserId){
         if(userRepository.existsByEmailAndUserIdNot(newEmail, currentUserId)){ // 검사
-            throw new UsernameNotFoundException("1");
+            throw new CustomException(ErrorCode.AUTH_EMAIL_NOT_FOUND);
         }
     }
 }

@@ -30,14 +30,14 @@ public class Post extends BaseEntity {
     private String content;
 
     // 좋아요, 댓글 갯수
-    @Column(nullable = false, columnDefinition = "BIGINT DEFAULT 0")
-    private Long likedCount;
-    @Column(nullable = false, columnDefinition = "BIGINT DEFAULT 0")
-    private Long commentCount;
+    @Column(nullable = false)
+    private Long likedCount = 0L;
+    @Column(nullable = false)
+    private Long commentCount = 0L;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 10, nullable = false, columnDefinition = "VARCHAR(10) DEFAULT 'N'")
-    private IsDelete isDelete;
+    @Column(length = 10, nullable = false)
+    private IsDelete isDelete = IsDelete.N;
 
     public Post(User user, String title, String content) {
         this.user = user;

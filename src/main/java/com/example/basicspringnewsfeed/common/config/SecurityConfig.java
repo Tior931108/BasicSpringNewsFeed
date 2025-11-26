@@ -14,10 +14,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 
 
-// 2025-11-24 : SecurityContext Setting
 @Configuration
-@EnableWebSecurity // 2025-11-24 : Enable Spring Security filterChain
-@EnableMethodSecurity(prePostEnabled=true) // 2025-11-24 : @PreAuthorize, @PostAuthorize와 같은 Authorization.
+@EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled=true)
 @RequiredArgsConstructor
 public class SecurityConfig{
 
@@ -32,7 +31,6 @@ public class SecurityConfig{
             "/actuator/health"
     };
 
-    // JwtAuthenticationFilter를 Bean에 등록 -> filterChain에 주입.
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter(){
         return new JwtAuthenticationFilter(jwtTokenProvider, customUserDetailsService);
@@ -43,14 +41,12 @@ public class SecurityConfig{
             HttpSecurity http,
             JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception{
         http
-                .csrf(csrf -> csrf.disable()) // 현 프로젝트는 REST API라 보므로, 쿠키 세션 X, JWT 사용 : 비활성화.
+                .csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                // Security 예외 처리.
                 .exceptionHandling(ex->ex
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                         .accessDeniedHandler(jwtAccessDeniedHandler)
                 )
-                // Public endpoints / authenticated()
                 .authorizeHttpRequests(auth->auth
                         .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
                         .anyRequest().authenticated()
@@ -58,6 +54,5 @@ public class SecurityConfig{
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
-
     }
 }
