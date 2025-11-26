@@ -1,5 +1,6 @@
 package com.example.basicspringnewsfeed.comment.dto.response;
 
+import com.example.basicspringnewsfeed.comment.entity.Comment;
 import com.example.basicspringnewsfeed.post.entity.Post;
 import com.example.basicspringnewsfeed.user.entity.User;
 import lombok.Getter;
@@ -20,5 +21,16 @@ public class CommentGetResponse {
         this.nickName = nickName;
         this.content = content;
         this.createdAt = createdAt;
+    }
+
+    // 11.26 성주연 - from 메서드 추가
+    public static CommentGetResponse from(Comment comment) {
+        return new CommentGetResponse(
+                comment.getCommentId(),
+                comment.getUser().getUserId(),
+                comment.getUser().getNickname(),
+                comment.getContent(),
+                comment.getCreatedAt()
+        );
     }
 }
