@@ -6,6 +6,8 @@ import com.example.basicspringnewsfeed.comment.dto.response.CommentGetResponse;
 import com.example.basicspringnewsfeed.comment.dto.response.CommentUpdateResponse;
 import com.example.basicspringnewsfeed.comment.repository.CommentRepository;
 import com.example.basicspringnewsfeed.comment.service.CommentService;
+import com.example.basicspringnewsfeed.common.security.AuthUser;
+import com.example.basicspringnewsfeed.common.security.CurrentUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,26 +22,27 @@ public class Controller {
     private final CommentRepository commentRepository;
     private final CommentService commentService;
 
-    //생성
-    //JWT 사용 시 ("/{postId}") 변경, 유저는 토큰에서
+    //댓글 생성
     @PostMapping("/{postId}/{userId}")
     public ResponseEntity<CommentCreateResponse> commentCreate(
-            @PathVariable Long postId,
             @PathVariable Long userId,
-//            @AuthenticationPrincipal 추가 예정 //JWT시큐리티 관련
-            @RequestBody CommentCreateRequest request) {
+            @RequestBody CommentCreateRequest request,
+            @AuthUser CurrentUser currentUser)
+            {
 
-        return ResponseEntity.ok().body(commentService.save(postId, userId, request));
+        return ResponseEntity.ok().body(commentService.save(userId, currentUser.id(), request));
     }
 
-    // 단건조회
+    //댓글 단 건 조회
     @GetMapping("/{commentId}")
     public ResponseEntity<CommentGetResponse> commentGet(
-            @PathVariable Long commentId) {
-        return ResponseEntity.ok().body(commentService.commentOneGet(commentId));
+            @PathVariable Long commentId,
+            @PathVariable Long postId,
+            @AuthUser CurrentUser currentUser) {
+        return ResponseEntity.ok().body(commentService.commentOneGet(commentId, currentUser,postId));
     }
 
-    //다 건 조회
+    // 댓글 다 건 조회
     @GetMapping
     public ResponseEntity<List<CommentGetResponse>> commentAllGet() {
         List<CommentGetResponse> responses = commentService.commentAllGet();
@@ -48,19 +51,21 @@ public class Controller {
         }
     }
 
-    //수정
+    //댓글 내용 수정
     @PutMapping("/{commentId}")
     public ResponseEntity<CommentUpdateResponse> commentUpdate(
             @PathVariable Long commentId,
-            @RequestBody CommentCreateRequest request) {
-        return ResponseEntity.ok(commentService.commentUpdate(commentId, request));
+            @RequestBody CommentCreateRequest request,
+            @AuthUser CurrentUser currentUser) {
+        return ResponseEntity.ok(commentService.commentUpdate(commentId, request, currentUser));
     }
 
-    //삭제
-
+    //댓글 삭제
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<Void> commentDelete(@PathVariable Long commentId) {
-        commentService.commentDelete(commentId);
+    public ResponseEntity<Void> commentDelete(
+            @PathVariable Long commentId,
+        @AuthUser CurrentUser currentUser) {
+        commentService.commentDelete(commentId, currentUser);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
