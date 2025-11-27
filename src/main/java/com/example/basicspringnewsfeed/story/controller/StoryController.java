@@ -1,5 +1,7 @@
 package com.example.basicspringnewsfeed.story.controller;
 
+import com.example.basicspringnewsfeed.common.security.AuthUser;
+import com.example.basicspringnewsfeed.common.security.CurrentUser;
 import com.example.basicspringnewsfeed.story.dto.MessageResponseDto;
 import com.example.basicspringnewsfeed.story.dto.StoryCreateRequestDto;
 import com.example.basicspringnewsfeed.story.dto.StoryResponseDto;
@@ -37,14 +39,16 @@ public class StoryController {
 
     // 4. 스토리 수정
     @PutMapping("/{storyId}")
-    public ResponseEntity<StoryResponseDto> updateStory(@PathVariable Long storyId, @RequestBody StoryUpdateRequestDto requestDto){
-        return ResponseEntity.ok(storyService.updateStory(storyId, requestDto));
+    public ResponseEntity<StoryResponseDto> updateStory(@PathVariable Long storyId,@RequestBody StoryUpdateRequestDto requestDto,
+                                                        @AuthUser CurrentUser currentUser){
+        return ResponseEntity.ok(storyService.updateStory(storyId, requestDto, currentUser));
     }
 
     // 5. 스토리 삭제
     @DeleteMapping("/{storyId}")
-    public ResponseEntity<MessageResponseDto> deleteStory(@PathVariable Long storyId){
-        return ResponseEntity.ok(storyService.deleteStory(storyId));
+    public ResponseEntity<MessageResponseDto> deleteStory(@PathVariable Long storyId,
+                                                          @AuthUser CurrentUser currentUser){
+        return ResponseEntity.ok(storyService.deleteStory(storyId, currentUser));
     }
 
 

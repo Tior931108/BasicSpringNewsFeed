@@ -17,7 +17,9 @@ public enum ErrorCode {
 
 
     // 1. Story
-
+    STORY_NOT_FOUND("STORY_NOT_FOUND", "존재하지 않는 스토리입니다.", HttpStatus.NOT_FOUND),
+    STORY_UNAUTHORIZED_ACCESS("STORY_UNAUTHORIZED_ACCESS", "스토리를 수정/삭제할 권한이 없습니다.", HttpStatus.FORBIDDEN),
+    STORY_DELETE("STORY_DELETE","스토리가 삭제되었습니다",HttpStatus.BAD_REQUEST),
 
 
 
