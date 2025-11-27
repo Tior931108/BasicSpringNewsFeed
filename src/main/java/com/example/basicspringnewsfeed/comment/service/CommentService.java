@@ -7,6 +7,9 @@ import com.example.basicspringnewsfeed.comment.dto.response.CommentUpdateRespons
 import com.example.basicspringnewsfeed.comment.entity.Comment;
 import com.example.basicspringnewsfeed.comment.repository.CommentRepository;
 import com.example.basicspringnewsfeed.common.entity.IsDelete;
+import com.example.basicspringnewsfeed.common.exception.CustomException;
+import com.example.basicspringnewsfeed.common.exception.ErrorCode;
+import com.example.basicspringnewsfeed.common.security.CurrentUser;
 import com.example.basicspringnewsfeed.post.entity.Post;
 import com.example.basicspringnewsfeed.post.repository.PostRepository;
 import com.example.basicspringnewsfeed.user.entity.User;
@@ -29,20 +32,25 @@ public class CommentService {
     //생성
     @Transactional
     public CommentCreateResponse save(Long postId, Long userId, CommentCreateRequest request) {
-        // user 예외처리
+        // user 존재하지 않을 때 예외처리
         User user = userRepository.findById(userId).orElseThrow(
-                // 예외처리 custom으로 변경 예정
-                () -> new IllegalArgumentException("유저을 찾을 수 없습니다."));
+                // 404에러
+                () -> new CustomException(ErrorCode.USER_NOT_FOUND)
+        );
 
-        //post 예외처리
+        //post 존재하지 않을 때 예외처리
         Post post = postRepository.findById(postId).orElseThrow(
-                // 예외처리 custom으로 변경 예정
-                () -> new IllegalStateException("게시글를 찾을 수 없습니다."));
+                // 404에러
+                () -> new CustomException(ErrorCode.POST_NOT_FOUND));
+
         Comment comment = new Comment(
                 post,
                 user,
                 request.getContent()
+
         );
+
+        //댓글 저장
         Comment commentSave = commentRepository.save(comment);
 
         //댓글 카운트 (post 클래스에서 호출)
@@ -57,37 +65,40 @@ public class CommentService {
     }
 
     //단 건 조회
-    //Todo 삭제 시 조회 목록에서 제거하기 구현 예정
     @Transactional(readOnly = false)
-    public CommentGetResponse commentOneGet(@PathVariable Long commentId) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(
+    public CommentGetResponse commentOneGet(@PathVariable Long commentId, CurrentUser currentUser, Long postId) {
+        //유저 정보
+        User user = userRepository.findById(currentUser.id())
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+//         단 건 조회 비활성화 데이터 조회 제외 코드
+        Comment comment = commentRepository.findByCommentIdAndIsDelete(commentId, IsDelete.N).orElseThrow(
                 // 예외처리 변경할 부분
-                () -> new IllegalArgumentException("댓글을 조회할 수 없습니다.")
+                () -> new CustomException(ErrorCode.COMMENT_NOT_FOUND)
         );
 
         {
-            // 라인화 하기
-            CommentGetResponse commentGetResponse = new CommentGetResponse(
+            return new CommentGetResponse(
                     comment.getCommentId(),
                     comment.getUser().getUserId(),
                     comment.getUser().getNickname(),
                     comment.getContent(),
                     comment.getCreatedAt()
             );
-            return commentGetResponse;
         }
     }
 
     //다 건 조회
-    //Todo 삭제 시 조회 목록에서 제거하기 구현 예정
     @Transactional(readOnly = false)
     public List<CommentGetResponse> commentAllGet() {
-        List<Comment> comments = commentRepository.findAll();
+        //삭제(비활성)된 데이터는 조회에서 제외
+        List<Comment> comments = commentRepository.findAllByIsDelete(IsDelete.N);
+
+        // 반환할 리스트 준비
         List<CommentGetResponse> dtos = new ArrayList<>();
         for (Comment comment : comments) {
             CommentGetResponse dto = new CommentGetResponse(
                     comment.getCommentId(),
-
                     comment.getUser().getUserId(),
                     comment.getUser().getNickname(),
                     comment.getContent(),
@@ -100,15 +111,25 @@ public class CommentService {
 
     //수정
     @Transactional
-    public CommentUpdateResponse commentUpdate(Long commentId, CommentCreateRequest request) {
+    public CommentUpdateResponse commentUpdate(Long commentId, CommentCreateRequest request, CurrentUser currentUser) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(
-                // 예외 처리 부분 변경하기
-                () -> new IllegalArgumentException("존재하지 않는 댓글입니다.")
-        );
-        comment.commentUpdate(
-                request.getContent()
+                // 댓글이 없는 경우
+                () -> new CustomException(ErrorCode.COMMENT_NOT_FOUND)
         );
 
+//        //댓글 권한 없을 때 에러 발생 403에러
+//        if (!comment.getUser().getUserId().equals(commentId)){
+//            throw new CustomException(ErrorCode.COMMENT_FORBIDDEN);
+//        }
+
+        if (!comment.getUser().getUserId().equals(currentUser.id())) {
+            throw new CustomException(ErrorCode.ONLY_OWNER_UPDATE);
+        }
+
+        //  댓글 내용 수정
+        comment.commentUpdate(request.getContent());
+
+        //수정 시 반환 내용
         return new CommentUpdateResponse(
                 comment.getCommentId(),
                 comment.getUser().getUserId(),
@@ -121,11 +142,20 @@ public class CommentService {
 
     //삭제
     @Transactional
-    public void commentDelete(Long commentId) {
+    public void commentDelete(Long commentId, CurrentUser currentUser
+    ) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(
-                //에러 발생 변경
-                () -> new IllegalArgumentException("존재하지 않은 댓글입니다.")
+                //404에러
+                () -> new CustomException(ErrorCode.COMMENT_NOT_FOUND)
         );
+        // 댓글 권한 없을 때 에러 발생 -> 403에러
+        if (!comment.getUser().getUserId().equals(currentUser.id())) {
+            throw new CustomException(ErrorCode.COMMENT_FORBIDDEN);
+        }
+
+//        if (!comment.getUser().getUserId().equals(currentUser.id())) {
+//            throw new CustomException(ErrorCode.ONLY_OWNER_UPDATE);
+//        }
 
         //IsDelete 겂을 No -> Yes(비활성)로 변경
         comment.updateIsDelete(IsDelete.Y);

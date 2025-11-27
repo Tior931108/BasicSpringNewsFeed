@@ -22,6 +22,8 @@ public enum ErrorCode {
 
 
     // 2. Comment
+    COMMENT_NOT_FOUND("COMMENT_NOT_FOUND","댓글이 존재하지 않습니다." ,HttpStatus.NOT_FOUND ),
+    COMMENT_FORBIDDEN("COMMENT_FORBIDDEN","댓글 권한이 없습니다." ,HttpStatus.FORBIDDEN ),
 
 
 
