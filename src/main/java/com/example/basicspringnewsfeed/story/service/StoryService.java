@@ -1,6 +1,7 @@
 package com.example.basicspringnewsfeed.story.service;
 
 import com.example.basicspringnewsfeed.common.entity.IsDelete;
+import com.example.basicspringnewsfeed.story.dto.MessageResponseDto;
 import com.example.basicspringnewsfeed.story.dto.StoryCreateRequestDto;
 import com.example.basicspringnewsfeed.story.dto.StoryResponseDto;
 import com.example.basicspringnewsfeed.story.dto.StoryUpdateRequestDto;
@@ -48,7 +49,7 @@ public class StoryService{
     // 3. 전체 스토리 목록 조회 (다건 조회)
     @Transactional(readOnly = true)
     public List<StoryResponseDto> getAllStories(){
-        List<Story> storyList =storyRepository.findByIdAndIsDeleteOrderByCreatedAtDesc(IsDelete.N);
+        List<Story> storyList =storyRepository.findByIsDeleteOrderByCreatedAtDesc(IsDelete.N);
         return storyList.stream()
                 .map(StoryResponseDto::new)
                 .collect(Collectors.toList());
@@ -61,6 +62,16 @@ public class StoryService{
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 스토리입니다"));
         story.updateStory(requestDto.getContent(),requestDto.getStoryImageUrl());
         return new StoryResponseDto(story);
+    }
+
+    // 5. 스토리 삭제
+    /// IsDelete.Y (삭제됨)  IsDelete.N (삭제 안 됨)
+    @Transactional
+    public MessageResponseDto deleteStory(Long storyId) {
+        Story story = storyRepository.findByStoryIdAndIsDelete(storyId, IsDelete.N)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 스토리입니다"));
+        story.updateIsDelete(IsDelete.Y);
+        return new MessageResponseDto("스토리가 삭제되었습니다");
     }
 
 }

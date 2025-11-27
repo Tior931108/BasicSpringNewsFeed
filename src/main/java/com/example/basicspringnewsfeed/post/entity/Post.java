@@ -1,12 +1,20 @@
 package com.example.basicspringnewsfeed.post.entity;
 
+import com.example.basicspringnewsfeed.comment.entity.Comment;
 import com.example.basicspringnewsfeed.common.entity.BaseEntity;
 import com.example.basicspringnewsfeed.common.entity.IsDelete;
+import com.example.basicspringnewsfeed.hashtagandpost.entity.HashtagPost;
+import com.example.basicspringnewsfeed.image.entity.Image;
 import com.example.basicspringnewsfeed.user.entity.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -28,14 +36,14 @@ public class Post extends BaseEntity {
     private String content;
 
     // 좋아요, 댓글 갯수
-    @Column(nullable = false, columnDefinition = "BIGINT DEFAULT 0")
-    private Long likedCount;
-    @Column(nullable = false, columnDefinition = "BIGINT DEFAULT 0")
-    private Long commentCount;
+    @Column(nullable = false)
+    private Long likedCount = 0L;
+    @Column(nullable = false)
+    private Long commentCount = 0L;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 10, nullable = false, columnDefinition = "VARCHAR(10) DEFAULT 'N'")
-    private IsDelete isDelete;
+    @Column(length = 10, nullable = false)
+    private IsDelete isDelete = IsDelete.N;
 
     public Post(User user, String title, String content) {
         this.user = user;
@@ -73,5 +81,24 @@ public class Post extends BaseEntity {
     public void updateIsDelete(IsDelete isDelete) {
         this.isDelete = IsDelete.Y;
     }
+
+    public void update(
+            @NotBlank(message = "제목을 입력해주세요.")
+            @Size(max = 100, message = "제목은 100자 이하로 입력해주세요.")
+            String title,
+            @NotBlank(message = "내용을 입력해주세요.")
+            @Size(max = 400, message = "내용은 400자 이하로 입력해주세요.") String content) {
+        this.title = title;
+        this.content = content;
+    }
+
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<HashtagPost> postHashtags = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
+    private List<Image> images = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
+    private List<Comment> comments = new ArrayList<>();
 
 }

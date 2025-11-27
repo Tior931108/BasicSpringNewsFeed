@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "user_post_likes")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserPostLike extends BaseEntity {
+public class UserPostLike {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

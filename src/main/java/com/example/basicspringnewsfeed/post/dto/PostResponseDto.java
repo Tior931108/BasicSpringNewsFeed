@@ -15,6 +15,7 @@ public class PostResponseDto {
     private final Long postId;
     private final String title;
     private final String content;
+    private final List<String> hashtags; //해시태그 - 성주연
     private final Long likedCount;
     private final Long commentCount;
     private final List<ImageDto> images;
@@ -22,10 +23,13 @@ public class PostResponseDto {
     private final LocalDateTime updatedAt;
 
     // 생성자
-    public PostResponseDto(Post post, List<Image> images) {
+    public PostResponseDto(Post post, List<Image> images,List<Hashtag> hashtags) {
         this.postId = post.getPostId();
         this.title = post.getTitle();
         this.content = post.getContent();
+        this.hashtags = hashtags.stream()
+                .map(Hashtag::getHashtagName)
+                .toList();
         this.likedCount = post.getLikedCount();
         this.commentCount = post.getCommentCount();
         this.images = images.stream()

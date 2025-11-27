@@ -44,7 +44,7 @@ public class UserPostsLikeService {
         if (isLiked) {
             // Unlike
             UserPostLike like = userPostLikeRepository.findByUserAndPost(user, post)
-                    .orElseThrow(() -> new IllegalStateException("좋아요 정보를 찾을 수 없습니다."));
+                    .orElseThrow(() -> new CustomException(ErrorCode.LIKE_NOT_FOUND));
             userPostLikeRepository.delete(like);
             post.decreaseLikeCount();
             return new UserPostsLikeResponseDto(false, post.getLikedCount(), "좋아요 취소 완료");

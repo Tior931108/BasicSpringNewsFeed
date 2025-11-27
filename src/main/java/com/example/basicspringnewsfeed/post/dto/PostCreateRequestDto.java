@@ -26,5 +26,5 @@ public class PostCreateRequestDto {
     private List<String> hashtags = new ArrayList<>();
 
     // 이미지 파일들
-    private List<MultipartFile> images = new ArrayList<>();
+    private List<MultipartFile> images;
 }
