@@ -117,6 +117,6 @@ https://teamsparta.notion.site/2b22dc3ef5148188b272f55eadd8e987?v=2b22dc3ef51481
 
 
 ## 작성자
-Spring 뉴스피드 프로젝트 2조 백은서
+Spring 뉴스피드 프로젝트 2조 정용준(팀장), 성주연, 백은서, 탁진수, 이청운, 윤종민
 
 
