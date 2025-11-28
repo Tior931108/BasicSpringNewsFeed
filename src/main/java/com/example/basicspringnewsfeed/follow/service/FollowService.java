@@ -27,6 +27,9 @@ public class FollowService {
     private final UserRepository userRepository;
     private final FollowRepository followRepository;
 
+    // followerId: 팔로우를 건 유저
+    // followingId : 팔로우의 대상
+
     // 팔로우 요청
     @Transactional
     public FollowResponse follow(FollowRequest followRequest) {
@@ -63,8 +66,8 @@ public class FollowService {
                 () -> new CustomException(ErrorCode.FOLLOW_NOT_FOUND)  // 없는 팔로우 예외처리
         );
         // 팔로우 승인 권한 예외처리
-        if (!follow.getFollowerId().getUserId().equals(currentUser.id())) {
-            throw new CustomException(ErrorCode.FOLLOWER_UNAUTHORIZED_ACCESS);
+        if (!follow.getFollowingId().getUserId().equals(currentUser.id())) {
+            throw new CustomException(ErrorCode.FOLLOW_FORBIDDEN_ACCESS);
         }
 
         follow.updateAccepted(); // 상태 변경
@@ -84,8 +87,8 @@ public class FollowService {
                 () -> new CustomException(ErrorCode.FOLLOW_NOT_FOUND)  // 없는 팔로우 예외처리
         );
         // 팔로우 거절 권한 예외처리
-        if (!follow.getFollowerId().getUserId().equals(currentUser.id())) {
-            throw new CustomException(ErrorCode.FOLLOWER_UNAUTHORIZED_ACCESS);
+        if (!follow.getFollowingId().getUserId().equals(currentUser.id())) {
+            throw new CustomException(ErrorCode.FOLLOW_FORBIDDEN_ACCESS);
         }
 
         follow.updateRejected();
@@ -106,8 +109,8 @@ public class FollowService {
                 () -> new CustomException(ErrorCode.FOLLOW_NOT_FOUND)   // 없는 팔로우 예외처리
         );
         // 팔로우 삭제 권한 예외처리
-        if (!follow.getFollowerId().getUserId().equals(currentUser.id())) {
-            throw new CustomException(ErrorCode.FOLLOW_UNAUTHORIZED_ACCESS);
+        if (!follow.getFollowingId().getUserId().equals(currentUser.id())) {
+            throw new CustomException(ErrorCode.DELETE_FOLLOWER_FORBIDDEN_ACCESS);
         }
         followRepository.delete(follow);
     }

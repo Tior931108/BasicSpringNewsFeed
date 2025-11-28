@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -56,8 +55,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
         // 6). 요청 정보를 details에 채우기. : auditing log, 어디서 로그인 했는지, 보안 정책 등.
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
         filterChain.doFilter(request, response);
     }
 
@@ -65,10 +62,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
     // 1). JwtAuthenticationFilter 자체를 건너 뛸 것인지 결정.
     // 2). true : 해당 요청은 JWT 파싱, 검증을 아예 하지 않는다. 따라서 SecurityContext도 건드리지 않으며, 다음 필터로 보낸다.
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) {
-        String path = request.getRequestURI();
-        return path.startsWith("/auth/")
-                || path.startsWith("/h2-console")
-                || path.startsWith("/actuator/health");
+    protected boolean shouldNotFilter(HttpServletRequest request){
+        String path=request.getRequestURI();
+        return path.startsWith("/h2-console") // DB
+                || path.startsWith("/actuator/health"); // Health Checking용 Endpoint
     }
 }

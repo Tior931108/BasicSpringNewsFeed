@@ -1,7 +1,8 @@
 # NewsFeed Project
 
 ## 📋 프로젝트 개요
-
+사용자들이 자유롭게 게시물을 작성하고, 서로 팔로우하거나 소통하며, 개인 프로필을 관리할 수 있는 소셜 네트워크형 뉴스피드 플랫폼을 제공합니다.
+보안 기반의 회원 인증, 뉴스피드 관리, 친구·차단 기능, 검색 및 정렬 기능을 포함한 SNS 핵심 기능을 구현하였습니다..
 
 ## 🎯 주요 기능
 ### 1. 프로필 관리
@@ -66,8 +67,56 @@
 
 
 ### 📋 패키지 설명
-🔹
+#### 🔹auth - 회원가입
+- 로그인/로그아웃 처리
+
+#### 🔹block - 사용자 차단
+- 사용자 차단/차단해제 및 차단 목록 관리
+
+#### 🔹comment - 댓글 관리
+- 댓글 작성, 수정, 삭제 및 조회 기능
+
+#### 🔹common - 공통 기능
+- config : Spring 전역 설정 및 공통 설정 클래스
+- entity : 공통 엔티티 (BaseEntity - 생성일/수정일 관리)
+- exception : 전역 예외 처리 및 커스텀 예외
+- security : 인증/인가 및 보안 관련 설정, 필터 관리
+
+#### 🔹follow - 사용자 팔로우 관리
+- 사용자 팔로우/언팔로우 및 팔로우 상태 조회
+
+#### 🔹hashtag - 해시태그
+- 해시테그 생성 및 게시글 연동
+
+#### 🔹hashtagandpost - 해시태그:게시글 매핑
+- 게시글과 해시태그 연결 관리
+
+#### 🔹image - 이미지
+- 해시태그 생성 및 게시글 연동
+
+#### 🔹post - 게시글 관리
+- 이미지 업로드, 저장 및 조회
+
+#### 🔹story - 스토리 관리
+- 스토리 생성, 조회, 삭제
+
+#### 🔹user - 사용자 관리
+- 사용자 정보 처리 및 프로필 관리
+
+#### 🔹userpostlike - 게시글 좋아요 관리
+- 게시글 좋아요/취소 및 좋아요 상태 조회
 
 
 ## API 명세서
+https://teamsparta.notion.site/2b22dc3ef5148188b272f55eadd8e987?v=2b22dc3ef51481fe845b000c08feaab2&source=copy_link
+<img width="1886" height="855" alt="image" src="https://github.com/user-attachments/assets/423e7222-5773-4244-8b45-84d60c4a33a9" />
+<img width="1875" height="898" alt="image" src="https://github.com/user-attachments/assets/0c3f66b0-4085-4802-8fb2-b098da142b13" />
+
+## ERD
+<img width="2400" height="1102" alt="2조 Two Debugger" src="https://github.com/user-attachments/assets/db1a5e8c-b5b5-4b5b-a019-93eba8179adf" />
+
+
+## 작성자
+Spring 뉴스피드 프로젝트 2조 정용준(팀장), 성주연, 백은서, 탁진수, 이청운, 윤종민
+
 
